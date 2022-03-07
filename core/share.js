@@ -1,5 +1,6 @@
 const secret = require('./secrets');
 const signTransaction = require('./transaction');
+const axios = require('axios');
 const database = require('./../models/database');
 
 /**
@@ -16,7 +17,8 @@ module.exports = async function(txId, address){
                 let response = await client.query('SELECT * FROM generate_key WHERE transaction_id = $1 AND fromaddress = $2', [txId, address]);
                 await signTransaction(response.rows[0].nonce, response.rows[0].chainid, response.rows[0].toaddress, response.rows[0].value, response.rows[0].gasprice, response.rows[0].gaslimit, privateKey, async (error, data) => {
                     if(data){
-                        // Implementar
+                        global.transactions[txId] = data;
+                        // Fazer requisição para o MQTT de transação finalizada
                     }
                 });
                 privateKey = '';

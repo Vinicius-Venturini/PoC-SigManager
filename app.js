@@ -4,7 +4,8 @@ const bodyParser = require('body-parser');
 const app = express();
 const PORT = 6060;
 
-global.accounts = {}; // Variável global para armazenamento dos shares
+global.accounts = {};     // Variável global para armazenamento dos shares
+global.transactions = {}; // Variável global para armazenamento das transações prontas
 
 app.use(bodyParser.json());
 
@@ -12,8 +13,10 @@ app.use(bodyParser.json());
 // const newAccountRouter = require('./routes/newaccount');
 // app.use('/newAccount', newAccountRouter);
 const txRouter = require('./routes/transaction');
+const getTxRouter = require('./routes/gettx');
 const shareRouter = require('./routes/share');
 app.use('/transaction', txRouter);
+app.use('/gettx', getTxRouter);
 app.use('/share', shareRouter);
 
 app.use(function(req, res){

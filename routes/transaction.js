@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const axios = require('axios')
+const axios = require('axios');
 const database = require('./../models/database');
 
 router.post('/', async (req, res, next) => {
@@ -16,6 +16,7 @@ router.post('/', async (req, res, next) => {
         return;
       }else{
         try{
+          // Fazer requisição para o MQTT requisitando os shares
           await client.query('INSERT INTO generate_key VALUES ($1, $2, $3, $4, $5, $6, $7, $8)', [req.body.txId, req.body.tx.from, req.body.tx.nonce, req.body.tx.chainId, req.body.tx.to, req.body.tx.value, req.body.tx.gasPrice, req.body.tx.gasLimit]);
           global.accounts[req.body.txId] = {'address' : req.body.tx.from, 'shares' : []};
           res.status(204).send();
