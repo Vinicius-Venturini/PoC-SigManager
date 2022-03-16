@@ -11,6 +11,7 @@ const database = require('./../models/database');
  */
 module.exports = async function(txId, address){
     if(global.accounts[txId].shares.length >= 3){
+        // Implementar verificador se a transação já foi assinada simultaneamente
         await secret.getKey(global.accounts[txId].shares, async (error, privateKey) => {
             if(privateKey){
                 const client = await database();
@@ -18,7 +19,9 @@ module.exports = async function(txId, address){
                 await signTransaction(response.rows[0].nonce, response.rows[0].chainid, response.rows[0].toaddress, response.rows[0].value, response.rows[0].gasprice, response.rows[0].gaslimit, privateKey, async (error, data) => {
                     if(data){
                         global.transactions[txId] = data;
-                        // Fazer requisição para o MQTT de transação finalizada
+                        const mqtt = await axios.post('http://localhost:5000/transaction_end', {
+                            ID_Tx: txId
+                        });
                     }
                 });
                 privateKey = '';

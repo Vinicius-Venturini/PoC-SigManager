@@ -1,6 +1,8 @@
 {
   "dependencies": {
+    "axios": "^0.26.1",
     "express": "^4.17.2",
+    "js-sha256": "^0.9.0",
     "pg": "^8.7.3",
     "secrets.js-grempe": "^2.0.0",
     "web3": "^1.7.0"
