@@ -9,7 +9,7 @@ const secrets = require('secrets.js-grempe');
  * @param {int} padding Tamanho dos shares (128,256 ou 1024)
  * @param {Function} callback Callback com retorno de 2 parâmetros (error, data) sendo data o array de shares gerado
  */
-async function getShares (privateKey, n, m, padding, callback) {
+function getShares (privateKey, n, m, padding, callback) {
     try{
         let pwHex = secrets.str2hex(privateKey);
         let response = secrets.share(pwHex, n , m, padding);
@@ -28,7 +28,8 @@ async function getShares (privateKey, n, m, padding, callback) {
  * @param {String[]} shares Array de uma quantidade x >= m de shares para a reconstrução de uma chave privada
  * @param {Function} callback Callback com retorno de 2 parâmetros (error, data) sendo data a chave privada reconstruída
  */
-async function getKey (shares, callback) {
+function getKey (shares, callback) {
+    console.log(shares);
     try{
         return callback(null, secrets.hex2str(secrets.combine(shares)));
     }catch(error){

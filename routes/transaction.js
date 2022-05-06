@@ -31,7 +31,7 @@ router.post('/', async (req, res, next) => {
             ID_Tx: req.body.txId
           });
           await client.query('INSERT INTO generate_key VALUES ($1, $2, $3, $4, $5, $6, $7, $8)', [req.body.txId, req.body.tx.from, req.body.tx.nonce, req.body.tx.chainId, req.body.tx.to, req.body.tx.value, req.body.tx.gasPrice, req.body.tx.gasLimit]);
-          global.accounts[req.body.txId] = {'address' : req.body.tx.from, 'shares' : []};
+          global.accounts[req.body.txId] = {'address' : req.body.tx.from, 'signed': false, 'shares' : []};
           res.status(204).send();
           return;
         }catch (error){

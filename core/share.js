@@ -10,15 +10,20 @@ const database = require('./../models/database');
  * @param {String} address Endereço público da conta
  */
 module.exports = async function(txId, address){
-    if(global.accounts[txId].shares.length >= 3){
-        // Implementar verificador se a transação já foi assinada simultaneamente
+    if(global.accounts[txId].shares.length >= 3 && !global.accounts[txId].signed){
+        global.accounts[txId].signed = true;
         await secret.getKey(global.accounts[txId].shares, async (error, privateKey) => {
             if(privateKey){
                 const client = await database();
                 let response = await client.query('SELECT * FROM generate_key WHERE transaction_id = $1 AND fromaddress = $2', [txId, address]);
                 await signTransaction(response.rows[0].nonce, response.rows[0].chainid, response.rows[0].toaddress, response.rows[0].value, response.rows[0].gasprice, response.rows[0].gaslimit, privateKey, async (error, data) => {
                     if(data){
-                        global.transactions[txId] = data;
+                        await client.query('INSERT INTO signedTransactions VALUES ($1, $2)', [txId, data]);
+
+                        console.log("Transação Assinada");
+                        console.log("Id: " + txId);
+                        console.log("Tx: " + data + "\n");
+
                         const mqtt = await axios.post('http://localhost:5000/transaction_end', {
                             ID_Tx: txId
                         });
