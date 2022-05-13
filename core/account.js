@@ -11,6 +11,6 @@ module.exports = async function(address){
             ID_Add: address
         });
 
-        await client.query('DELETE FROM newAccount WHERE address = $1', [address]);
+        await client.query('UPDATE accounts SET status = $1 WHERE address = $2', ["Aprovada", address]);
     }
 }

@@ -3,15 +3,14 @@ const router = express.Router();
 const database = require('../models/database');
 
 router.get('/', async (req, res, next) => {
-  if(req.query.txId){
+  if(req.query.address){
     const client = await database();
-    const response = await client.query('SELECT rawtx FROM signedTransactions WHERE txid = $1', [req.query.txId]);
+    const response = await client.query('SELECT status FROM accounts WHERE address = $1', [req.query.address]);
     if(response.rowCount == 1){
-      res.status(200).send({tx: response.rows[0].rawtx});
-      await client.query('DELETE FROM signedTransactions WHERE txid = $1', [req.query.txId]);
+      res.status(200).send({status: response.rows[0].status});
       return;
     }else{
-      res.status(404).send('404: Transaction Not Found');
+      res.status(404).send('404: Account Not Found');
       return;
     }
   }else{

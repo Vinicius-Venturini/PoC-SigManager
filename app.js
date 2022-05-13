@@ -11,10 +11,12 @@ app.use(bodyParser.json());
 const newAccountRouter = require('./routes/newaccount');
 const txRouter = require('./routes/transaction');
 const getTxRouter = require('./routes/gettx');
+const getShareRouter = require('./routes/getshare');
 const shareRouter = require('./routes/share');
-app.use('/newAccount', newAccountRouter);
+app.use('/newaccount', newAccountRouter);
 app.use('/transaction', txRouter);
 app.use('/gettx', getTxRouter);
+app.use('/getshare', getShareRouter);
 app.use('/share', shareRouter);
 
 app.use(function(req, res){

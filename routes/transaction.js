@@ -15,7 +15,7 @@ router.post('/', async (req, res, next) => {
     console.log(req.body);
     
     const client = await database();
-    const response = await client.query('SELECT * FROM accounts WHERE address = $1', [req.body.tx.from]);
+    const response = await client.query('SELECT * FROM accounts WHERE address = $1 AND status = $2', [req.body.tx.from, "Aprovada"]);
     if(response.rowCount != 1){
       res.status(403).send('403: Forbidden');
       return;
